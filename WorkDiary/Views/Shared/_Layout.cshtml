@@ -1,0 +1,52 @@
+﻿@using WorkDiary.Enums;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<body class="d-flex h-100 text-center text-white bg-dark">
+    <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+        <header class="mb-3">
+            <nav class="py-2">
+                <div class="container d-flex flex-wrap">
+                    <ul class="nav me-auto">
+                        <li class="nav-item">
+                            <a href="/diary/months" class="nav-link link-light px-2">Diary</a>
+                        </li>
+                        @if (User.Claims.Select(claim => claim.Value == nameof(Roles.Admin)).FirstOrDefault())
+                        {
+                            <li class="nav-item">
+                                <a href="/diary/Admin" class="nav-link link-light px-2">Admin</a>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="nav">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item"><a asp-controller="account" asp-action="login" class="nav-link link-light px-2">Sign in</a></li>
+                            <li class="nav-item"><a asp-controller="account" asp-action="register" class="nav-link link-light px-2">Register</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a href="#" class="nav-link link-light px-2">@User.Identity.Name</a></li>
+                            <li class="nav-item"><a href="/account/logout" class="nav-link link-light px-2">Log Out</a></li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="px-3">
+            @RenderBody()
+        </main>
+
+    </div>
+</body>
+</html>
+

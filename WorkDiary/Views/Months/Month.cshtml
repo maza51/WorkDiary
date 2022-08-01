@@ -1,0 +1,73 @@
+﻿@using WorkDiary.Entities.Diary;
+@using System.Globalization;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Month
+@{
+    Layout = "_Layout";
+}
+
+<div class="container d-flex flex-wrap justify-content-center" style="max-width: 40rem;">
+
+    <h2 class="m-2">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.MonthNumber)</h2>
+    <table class="table table-dark">
+        <tbody>
+            @{
+                var diaryDays = Model.Days.OrderBy(x => x.DayNumber);
+                var daysCount = DateTime.DaysInMonth(Model.YearNumber, Model.MonthNumber);
+
+                for (int i = 1; i <= daysCount; i++)
+                {
+                    var diaryDay = diaryDays.FirstOrDefault(x => x.DayNumber == i);
+
+                    <tr>
+                        <th scope="row" style="width: 50px">@i</th>
+                        <td style="text-align:left" contenteditable="true" oninput="CreateOrUpdateNote(@i, this)">@diaryDay?.Note</td>
+                        <td style="width: 50px" contenteditable="true" oninput="CreateOrUpdateWorkedHours(@i, this)">@diaryDay?.WorkedHours</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function CreateOrUpdateNote(day, htmlElement) {
+
+        let diaryday = {
+            daynumber: day,
+            note: htmlElement.textContent,
+            monthid: @Model.Id
+        }
+
+        PostOnCreateOrUpdate(diaryday);
+    }
+
+    function CreateOrUpdateWorkedHours(day, htmlElement) {
+
+        let diaryday = {
+            daynumber: day,
+            workedhours: parseInt(htmlElement.textContent),
+            monthid: @Model.Id
+        }
+
+        PostOnCreateOrUpdate(diaryday);
+    }
+
+    var timeout = [];
+
+    function PostOnCreateOrUpdate(diaryday) {
+
+        clearTimeout(timeout[diaryday.daynumber]);
+
+        timeout[diaryday.daynumber] = setTimeout(function () {
+
+            fetch("https://" + document.location.host + '/api/diary/days', {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(diaryday)
+            });
+        }, 500);
+    }
+</script>

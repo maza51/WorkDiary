@@ -1,0 +1,41 @@
+﻿.card {
+    width: 18rem;
+    height: 200px;
+    max-width: 18rem;
+    border-color: #373b3e;
+    box-shadow: 0 4px 15px 0 rgb(0 0 0 / 20%);
+}
+
+header {
+    background-color: #2d3339;
+    box-shadow: 0 4px 15px 0 rgb(0 0 0 / 20%);
+}
+
+.form-signin {
+    max-width: 300px;
+    margin-top: 50px;
+}
+
+.form-signin form {
+    width: 300px;
+}
+
+.form-signin .form-floating:focus-within {
+    z-index: 2;
+}
+
+.username {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.password {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.confirmpassword {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,54 @@
+﻿@using WorkDiary.Entities.Diary;
+@using System.Globalization;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<Month>
+@{
+    Layout = "_Layout";
+}
+
+<div class="container d-flex flex-wrap justify-content-center" style="max-width: 40rem;">
+    @{
+        var diaryMonths = Model.OrderByDescending(x => x.YearNumber).ThenByDescending(x => x.MonthNumber);
+
+        foreach (var diaryMonth in diaryMonths)
+        {
+            <div role="button" class="card text-white bg-dark m-2 pe" onclick="cardOnClick(@diaryMonth.Id)">
+                <div class="card-header" style="background-color: #2d3339">
+                    @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(diaryMonth.MonthNumber)
+                </div>
+                <div class="card-body" style="text-align: left; ">
+                    @{
+                        var diaryDays = diaryMonth.Days.OrderBy(x => x.DayNumber);
+
+                        if (diaryDays != null && diaryDays.Count() <= 0)
+                        {
+                            <div class="card-text d-block text-truncate text-center">
+                                <span>no day entries</span>
+                            </div>
+                        }
+
+                        var i = 1;
+
+                        foreach (var diaryDay in diaryDays)
+                        {
+                            <div class="card-text d-block text-truncate">
+                                <span>@diaryDay.DayNumber</span>. <span>@diaryDay.Note</span>
+                            </div>
+
+                            if (i >= 5)
+                            {
+                                break;
+                            }
+
+                            i++;
+                        }
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script>function cardOnClick(i) {
+        location.href = "months/" + i;
+    }</script>
